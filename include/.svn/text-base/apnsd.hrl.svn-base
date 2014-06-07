@@ -1,0 +1,10 @@
+%%
+%% apnsd.hrl
+%%
+-define( READ_TIMEOUT, 60000). 		   % 1min
+-define( KEEP_ALIVE_INTERVAL, 300000). % 5min
+-define( ECHO_TIMEOUT, 1500000).       % 15 min
+-define( MAX_QUEQUE, 100).
+
+-define( DEBUG_INFO(X),apnsd_util:log(X)).
+-define( DEBUG_ERR(X),apnsd_util:log(X)).
