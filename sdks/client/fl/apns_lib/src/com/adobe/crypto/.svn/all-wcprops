@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/vlab/!svn/ver/638/trunk/vlab/AnimationEditor/client/AE1_2/libs/com/adobe/crypto
+END
+MD5Stream.as
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/vlab/!svn/ver/638/trunk/vlab/AnimationEditor/client/AE1_2/libs/com/adobe/crypto/MD5Stream.as
+END
+WSSEUsernameToken.as
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/vlab/!svn/ver/638/trunk/vlab/AnimationEditor/client/AE1_2/libs/com/adobe/crypto/WSSEUsernameToken.as
+END
+SHA224.as
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/vlab/!svn/ver/638/trunk/vlab/AnimationEditor/client/AE1_2/libs/com/adobe/crypto/SHA224.as
+END
+MD5.as
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/vlab/!svn/ver/638/trunk/vlab/AnimationEditor/client/AE1_2/libs/com/adobe/crypto/MD5.as
+END
+HMAC.as
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/vlab/!svn/ver/638/trunk/vlab/AnimationEditor/client/AE1_2/libs/com/adobe/crypto/HMAC.as
+END
+SHA256.as
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/vlab/!svn/ver/638/trunk/vlab/AnimationEditor/client/AE1_2/libs/com/adobe/crypto/SHA256.as
+END
+SHA1.as
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/vlab/!svn/ver/638/trunk/vlab/AnimationEditor/client/AE1_2/libs/com/adobe/crypto/SHA1.as
+END

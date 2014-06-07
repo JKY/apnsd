@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   implements="com.apns.IApnsMessageRecver"
+			   creationComplete="init()"
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.apns.Apns;
+			import com.apns.ApnsMessage;
+			import com.apns.IApnsMessageRecver;
+			
+			private var apns:Apns;
+			
+			
+			private function init():void
+			{
+				
+			}
+			
+			
+		    public function onConnected():void
+			{
+				
+			}
+			
+			
+			public function onBadRequest(rc:int):void{
+				if(rc == 999){
+					//ExternalInterface.call("apns_recv","sys",new Date().toLocaleTimeString(),"image/evil.gif","知道吗，哥现在很生气");
+				}
+			}
+			
+			
+			private function connect():void{
+				apns = new Apns(this,"http://localhost:8888/7d/handler/apns_proxy.php",this.gid_txt.text,uname.text,this.pwd.text);
+				apns.connect();
+			}
+			
+			private function send():void
+			{
+				var str:String = txt.text;
+				if(useProxy.selected){
+					apns.send(str);
+				}else{
+					var m:ApnsMessage ;
+					if(brc.selected){
+						m = new ApnsMessage(ApnsMessage.M_TYPE_BROADCAST,uid_txt.text + ":" + str);
+						apns.send2(m);
+					}else{
+						m = new ApnsMessage(ApnsMessage.M_TYPE_SEND,uid_txt.text + ":" + str);
+						apns.send2(m);
+					}
+				}
+			
+			}
+			
+			
+			public function onRecv(m:ApnsMessage):void
+			{
+				var t:uint = m.type;
+				var str:String = m.content;
+				log("receiver","recv:" + t.toString() + ":" + str);
+				/*
+				if(t == ApnsMessage.M_TYPE_SEND)
+				{
+					var str:String = m.content;
+					log("receiver","recv:" + str);
+					var arr:Array = str.split(":");
+					var s:String = arr[1];
+					arr = s.split(",");
+					if(arr.length == 3)
+					{
+						//ExternalInterface.call("apns_recv",arr[0],arr[1],arr[2]);
+					}
+				}
+				*/
+			}
+			
+			public function log(tag:String,s:String):void
+			{
+				logBox.text +=  new Date().toLocaleTimeString() + ":" + tag + ":" + s + "\n";
+			}
+			
+			
+			public function onDisconnect():void
+			{
+				log("receiver","disconnected");
+			}
+			
+			public function onError(e:Event):void
+			{
+				log("receiver",e.toString());
+			}
+		]]>
+	</fx:Script>
+<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<s:TextArea x="10" y="108" width="589" height="417" id="logBox"/>
+	<s:Button x="641" y="9" label="connect" click="connect()"/>
+	<s:Button x="641" y="54" label="send" click="send()"/>
+	<s:TextInput x="224" y="56" width="299" id="txt"/>
+	<s:TextInput x="43" y="56" id="uid_txt" text="vl"/>
+	<s:TextInput x="41" y="10" id="gid_txt" text="test"/>
+	<s:Label x="10" y="14" text="GID:"/>
+	<s:Label x="10" y="62" text="UID:"/>
+	<s:Label x="183" y="63" text="TXT:"/>
+	<s:TextInput x="394" y="10" id="pwd" text="1234567"/>
+	<s:Label x="357" y="15" text="PWD:"/>
+	<s:CheckBox x="530" y="10" label="USE PROXY" id="useProxy"/>
+	<s:Label x="176" y="15" text="UNAME:&#xd;"/>
+	<s:TextInput x="226" y="10" id="uname" text="admin"/>
+	<s:CheckBox x="531" y="55" label="BROADCAST" id="brc"/>
+</s:Application>
