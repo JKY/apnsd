@@ -8,7 +8,7 @@
 -export([start_link/0,init/1]).
  
 -define(SUPERVISOR(M), {M, {M, start_link, []}, permanent, infinity, supervisor, [M]}).
--define(WORKER(M), {M, {M, start_link, []}, permanent, 10000, worker, [M]}).
+-define(WORKER(M), {M, {M, start_link, []}, permanent, infinity, worker, [M]}).
 
 start_link() ->
 	supervisor:start_link({local, ?MODULE}, ?MODULE, []).

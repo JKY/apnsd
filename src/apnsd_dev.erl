@@ -34,8 +34,7 @@
 -define(EVT_DEV_EHCO,16#F2).
 -define(EVT_DEV_RECV,16#F3).
 -define(EVT_DEV_LEAVE,16#FF).
-
-
+%% state 
 -record(state, {
 					id = nil,
                     ch ,
@@ -48,26 +47,22 @@
 
 -export([start_link/1, init/1]).
          
-
-%%
-%%
-%%
+%% start link 
 start_link( Listener ) ->
     Pid = spawn_link(?MODULE, init, [Listener]),
     {ok,Pid}.
 
 
-%%
-%%
-%%
+% init 
 init( Listener ) ->
-    case gen_tcp:accept(Listener,5000) of
+    case gen_tcp:accept(Listener) of %% 5000
         {ok, Sock} ->
-                apnsd_conn:start_sock(),
+                apnsd_conn:open_dev(),
                 inet:setopts(Sock, [{active, false}]),
                 loop(#state{curr=?STATE_INIT,sock=Sock});
-        {error, _} ->
-                apnsd_conn:start_sock()
+        {error, E} ->
+                io:format("## device error:~s\n",[E]),
+                apnsd_conn:open_dev()
             %    apnsd_trace:trap({err,accept,Reason})
     end,
     erlang:garbage_collect(self()).
@@ -151,7 +146,7 @@ event( ?EVT_DEV_CONNECED, S, _, _) ->
             [ChStr,Dev] = Data, %% join channel
             Ch = binary_to_atom(ChStr,latin1),
             Id = binary_to_atom(Dev,latin1),
-            apnsd_util:send_pm_byname(cproc,{join, Ch, {Id,self()}}),
+            apnsd_util:send_msg_to_process_byname(apnsd_channel,{join, Ch, {Id,self()}}),
             {ok,S#state{curr=?STATE_WAITTING,id=Id,cn=Ch}};
         {badmatch,_} ->
             {ok,S#state{curr=?STATE_ERR,err=badpkt}};
@@ -208,7 +203,7 @@ event( ?RQ_ECHO, S , _, _) ->
         _->
         	{ok, S}
     end;
-           
+
 event( ?RQ_PUSH, S=#state{curr=?STATE_JOINED}, nil, Data) ->
     case send(S,Data) of
         {ok,S1} ->
@@ -222,12 +217,12 @@ event( ?RQ_PUSH, S=#state{curr=?STATE_JOINED}, nil, Data) ->
 event( ?RQ_PUSH, S=#state{curr=?STATE_JOINED}, Reporter, Data) -> 
     case send(S,Data) of
         {ok,S1} ->
-            apnsd_util:send_pm(Reporter,sent),
-            apnsd_trace:trap({tx,{c,S#state.cn, d,S#state.id, m,Data}}),
+            apnsd_util:send_msg_to_process(Reporter,sent),
+            apnsd_trace:trap({tx,{c,S#state.cn,d,S#state.id,m,Data}}),
             {ok,S1};
         {failed,S1} ->
-            apnsd_util:send_pm(Reporter,failed),
-            apnsd_trace:trap({tx_fail,{c,S#state.cn, d,S#state.id, m,Data}}),
+            apnsd_util:send_msg_to_process(Reporter,failed),
+            apnsd_trace:trap({tx_fail,{c,S#state.cn,d,S#state.id,m,Data}}),
             {ok,S1}
     end;
 
@@ -236,7 +231,7 @@ event(?RQ_PUSH, S , Reporter , _) ->
         nil ->
             {ok,S};
         _ ->
-            apnsd_util:send_pm(Reporter,failed),
+            apnsd_util:send_msg_to_process(Reporter,failed),
             {ok,S}
     end.
 %%
@@ -260,7 +255,7 @@ send( S, Data) ->
 die(S)->
     gen_tcp:close(S#state.sock),
     if is_pid(S#state.ch) ->
-        apnsd_util:send_pm(S#state.ch,{leave,S#state.id,self()});
+        apnsd_util:send_msg_to_process(S#state.ch,{leave,S#state.id,self()});
     true ->
         ok
     end.

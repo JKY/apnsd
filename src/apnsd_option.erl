@@ -5,9 +5,6 @@
 -module(apnsd_option).
 -include("apnsd.hrl").
 -export([channel_capacity/1]).
-
-
-
 %%
 %%
 %%

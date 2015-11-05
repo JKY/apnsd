@@ -1,23 +1,16 @@
 %%
 %% apnsd.erl 
-%%
+%% app entry
 %% 
 -module(apnsd).
 -behaviour(application).
 -export([start/0,start/2,stop/1,init/0]).
 
-start() ->
-	init().
-
-start(_StartType,_Args) ->
-    init().
-
-stop(_State) ->
- 	ok.
+start() -> init().
+start(_StartType,_Args) -> init().
+stop(_State) -> ok.
  
-%%
-%%
-%%
+%% start application
 init()->
 	application:start(mongodb),
 	net_adm:world(),

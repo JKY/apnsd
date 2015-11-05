@@ -5,6 +5,7 @@
 -module(apnsd_util).
 -export([gwait/2,send_pm/2,send_pm_byname/2,tsnow/0]).
 
+%% wait groups 
 gwait(G,Tries) when Tries > 0 ->
     pg2:which_groups(),
     case pg2:which_groups() of
@@ -20,11 +21,13 @@ gwait(G,Tries) when Tries > 0 ->
             timer:sleep(499),
       gwait(G,Tries - 1)
     end;
-    
 gwait(_,Tries) when Tries == 0 ->
 	timeout.
 
-send_pm(P,M) ->
+
+
+%%% send message to process by Pid
+send_msg_to_process(P,M) ->
     case is_pid(P) of
         true ->
             P ! M;
@@ -32,7 +35,10 @@ send_pm(P,M) ->
             ok
     end.
 
-send_pm_byname(Npro,M) ->
+
+
+%%% send message to process by process name
+send_msg_to_process_byname(Npro,M) ->
     try
         Npro ! M
     catch
@@ -41,7 +47,8 @@ send_pm_byname(Npro,M) ->
             ok % dbg only
     end.
 
-tsnow()->
-    {Mega, Secs, _} = now(),
-    Mega*1000000 + Secs.
+
+
+%%% time
+tsnow()-> {Mega, Secs, _} = now(), Mega*1000000 + Secs.
 	

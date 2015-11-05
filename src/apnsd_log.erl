@@ -11,11 +11,10 @@
 				  db_name
                }).
 
-
 start_link()->
-    {ok,DB_HOST} =  application:get_env(db_host),
-    {ok,DB_PORT} =  application:get_env(db_port),
-    {ok,DB_NAME} =  application:get_env(db_name),
+    {ok,DB_HOST} = application:get_env(db_host),
+    {ok,DB_PORT} = application:get_env(db_port),
+    {ok,DB_NAME} = application:get_env(db_name),
     Pid = spawn_link(fun() ->
     					Ctx = #context{
     							   mgn_conn_pool = resource_pool:new (mongo:connect_factory({DB_HOST,DB_PORT}), 15),
@@ -61,19 +60,19 @@ w(Ctx,DB,Data)->
 %% send
 log({tx,Data}) ->
 	T = apnsd_util:tsnow(),%calendar:now_to_local_time(erlang:now()),
-	apnsd_util:send_pm_byname(apnsd_logs,{write,message,{e,send,p,Data,t,T}}),
+	apnsd_util:send_msg_to_process_byname(apnsd_logs,{write,message,{e,send,p,Data,t,T}}),
     done;
 %% send fail
 log({tx_fail,Data}) ->
 	%T = calendar:now_to_local_time(erlang:now())
 	T = apnsd_util:tsnow(),
-	apnsd_util:send_pm_byname(apnsd_logs,{write,message,{e,fail,p,Data,t,T}}),
+	apnsd_util:send_msg_to_process_byname(apnsd_logs,{write,message,{e,fail,p,Data,t,T}}),
     done;
 %% err
 log({err,Type,Reason}) ->
 	%T = calendar:now_to_local_time(erlang:now()),
 	T = apnsd_util:tsnow(),
-	apnsd_util:send_pm_byname(apnsd_logs,{write,err,{type,Type,reason,Reason,t,T}}),
+	apnsd_util:send_msg_to_process_byname(apnsd_logs,{write,err,{type,Type,reason,Reason,t,T}}),
     done;
 
 log(_) -> next.

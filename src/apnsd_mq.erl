@@ -1,5 +1,6 @@
 %%
 %% ansd_mq.erl 
+%% message Q, save offline messages 
 %% 
 -module(apnsd_mq).
 -include("apnsd.hrl").
@@ -39,7 +40,7 @@ loop(Ctx) ->
         {pop,Sender,C,D}->
             case flush_m(Ctx,mqueue,C,D) of
               {ok,L} ->
-                  apnsd_util:send_pm(Sender,{poped,C,D,L});
+                  apnsd_util:send_msg_to_process(Sender,{dequeue,C,D,L});
               _ ->
                 ok
             end;
@@ -51,16 +52,14 @@ loop(Ctx) ->
 
 
 push(Ch, Dev, Data) ->
-    apnsd_util:send_pm_byname(?MODULE,{push,Ch,Dev,Data}),
+    apnsd_util:send_msg_to_process_byname(?MODULE,{push,Ch,Dev,Data}),
     ok.
+    
 %% event call
 pop(Sender,Ch,Dev)-> 
-    apnsd_util:send_pm_byname(?MODULE,{pop,Sender,Ch,Dev}).
+    apnsd_util:send_msg_to_process_byname(?MODULE,{pop,Sender,Ch,Dev}).
 
 
-%%
-%%
-%%
 save_m(Ctx,DB,Ch,Dev,Data,T)->
   case resource_pool:get(Ctx#context.mgn_conn_pool) of 
     {ok,Conn} ->
