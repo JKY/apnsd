@@ -116,7 +116,7 @@ cl_dev_names(Sender,N,NL) when N=:=0 ->
 %% push result collection process 
 wait4push_stat(Tx,M,N) when N > 0 ->
     receive
-        {T,F,S} ->
+        {T,_,S} ->
 	         wait4push_stat(Tx+T,M+S,N-1)
     after ?CHANNEL_REPORT_TIMEOUT ->
         wait4push_stat(Tx,M,N-1)

@@ -32,7 +32,7 @@ chain_process([H|L],E) ->
         _->
             ok
     end;
-chain_process([],E) -> failed.
+chain_process([],_) -> failed.
 
 
 %% regist handler

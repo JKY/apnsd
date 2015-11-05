@@ -3,7 +3,7 @@
 %%
 %% 
 -module(apnsd_util).
--export([gwait/2,send_pm/2,send_pm_byname/2,tsnow/0]).
+-export([gwait/2,send_msg_to_process/2,send_msg_to_process_byname/2,tsnow/0]).
 
 %% wait groups 
 gwait(G,Tries) when Tries > 0 ->
@@ -43,12 +43,15 @@ send_msg_to_process_byname(Npro,M) ->
         Npro ! M
     catch
         % registered process To is unavailable,
-        X:Reason -> %exit: {badarg, _}
+        _:Reason -> %exit: {badarg, _}
+            io:format("send_msg_to_process_byname error:~s\n",[Reason]),
             ok % dbg only
     end.
 
 
 
 %%% time
-tsnow()-> {Mega, Secs, _} = now(), Mega*1000000 + Secs.
+tsnow()-> 
+    {Mega,Secs, _} = erlang:timestamp(), 
+    Mega*1000000 + Secs.
 	

@@ -77,7 +77,7 @@ loop(S=#state{curr=?STATE_INIT}) ->
 loop(S=#state{curr=?STATE_WAITTING}) ->
      receive
        {ok,Ch} ->
-            {_, Secs, _} = erlang:now(),
+            {_, Secs, _} = erlang:timestamp(),
             apnsd_trace:trap({dev_conncted,S#state.cn,S#state.id}),
             Next = S#state{curr=?STATE_JOINED,ch=Ch,last_response = Secs},
             loop(Next);
@@ -122,7 +122,7 @@ loop( S=#state{ err = Reason ,last_response = LR }) ->
         dup ->
             die(S);
         timeout ->
-            {_, Now, _} = erlang:now(),
+            {_, Now, _} = erlang:timestamp(),
             if Now - LR > ?ECHO_TIMEOUT/1000 ->
                 loop(S#state{curr=?STATE_ERR,err=ping_timeout});
             true ->
@@ -167,7 +167,7 @@ event( ?EVT_DEV_CONNECED, S, _, _) ->
 %                    case R of 
 %                    	ok->
 %                             apnsd_channel:nodup(Ch,Dev),
-%                             {_, Secs, _} = erlang:now(),
+%                             {_, Secs, _} = erlang:timestamp(),
 %                             Next = S#state{curr=?STATE_JOINED,id=Dev,last_response = Secs},
 %                    		 MQ = apnsd_mq:pop(Dev),
 %                    		 %lists:foreach(fun(N,Mess) ->
@@ -194,7 +194,7 @@ event( ?RQ_ECHO, S , _, _) ->
     apnsd_pkt:write(S#state.sock,?RQ_ECHO,0, nil),
     case apnsd_pkt:read(S#state.sock) of
         {pkt,?EVT_DEV_EHCO,_,_} ->
-        	{_, Secs, _} = erlang:now(),
+        	{_, Secs, _} = erlang:timestamp(),
             {ok,S#state{last_response = Secs}};
         {badmatch,_} ->
         	{ok ,S#state{curr=?STATE_ERR,err=badpkt}};
@@ -242,7 +242,7 @@ send( S, Data) ->
     R = apnsd_pkt:read(S#state.sock),
     case R of
         {pkt,?EVT_DEV_RECV,_,_} ->
-            {_, Secs, _} = erlang:now(),
+            {_, Secs, _} = erlang:timestamp(),
             {ok,S#state{last_response = Secs}};
         {badmatch,_} ->
             {failed,S#state{curr=?STATE_ERR,err=badpkt}};
