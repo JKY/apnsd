@@ -13,6 +13,7 @@ ERLANG 推送服务端
    - 设置环境变量
 
 	$ 	vi /etc/profile
+	
 	$ 	export PATH=$PATH:/usr/local/erlang/bin
 
 
@@ -22,15 +23,24 @@ ERLANG 推送服务端
 3. download and compile libs 
 
 	$ git clone git://github.com/TonyGen/bson-erlang.git bson
+
 	$ git clone git://github.com/TonyGen/mongodb-erlang.git mongodb
+
 	$ cd bson
+
 	$ erlc -o ../apnsd/ebin -I include src/*.erl
+
 	$ cd ../mongodb
+
 	$ erlc -o ../apnsd/ -I include -I .. src/*.erl
+
 	$ cd ..
 
+
 4. compile apnsd
+	
 	$  cd apnsd
+
 	$  erlc -o ebin -I include src/*.erl
 
 
