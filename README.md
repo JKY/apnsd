@@ -32,3 +32,21 @@ ERLANG 推送服务端
 4. compile apnsd
 	$  cd apnsd
 	$  erlc -o ebin -I include src/*.erl
+
+
+
+### PHP API
+
+for handling clients's restful requests, use apache & php, peb is a php module which as a cnode of erlang: 
+
+	1. install mypeb (http://code.google.com/p/mypeb/)
+		$ phpize
+		$ ./configure --with-erlanglib=/usr/local/erlang/lib/erlang/lib/erl_interface-3.8/lib/ --with-erlanginc=/usr/local/erlang/	  lib/erlang/lib/erl_interface-3.8/include/
+		$ sudo make && make install 
+
+	2. add moudle peb.so to php.ini, if phpinfo() shown the peb has been loaded, it's ready, otherwise 
+	  back to install peb.
+
+notes: for mac os, link the development header files, otherwise the php will can't found the includes and libs (disable rootless first):
+  
+	  $ sudo ln -s /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/usr/include /usr/include

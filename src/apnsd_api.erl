@@ -96,8 +96,6 @@ cl_channel_info(Sender,N,Stat) when N=:=0 ->
     Sender ! Stat.
 
 
-
-
 %% waiting for all channel response to report the device names 
 cl_dev_names(Sender,N,NL) when N > 0 ->
     receive
