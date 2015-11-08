@@ -75,11 +75,4 @@ if(!defined("__APNS_PHP_")){
 		}
 	}
 }
-
-$agent = new APNSAgent("apnsd@127.0.0.1","123");
-$result = $agent->push("foo", "dev", "hello world....",array("sync"=>false));
-print_r($result);
-echo "\n";
-//$stat = $agent->stat('foo');
-//print_r($stat);
 ?>

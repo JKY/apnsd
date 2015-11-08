@@ -51,3 +51,25 @@ for handling clients's restful requests, use apache & php, peb is a php module w
 notes: for mac os, link the development header files, otherwise the php will can't found the includes and libs (disable rootless first):
   
 	  $ sudo ln -s /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/usr/include /usr/include
+	  
+	  
+### START SERVICE
+	
+	  $ cd ~/apnsd/ebin
+	  $ erl -sname apnsd -setcookie 123 
+	  
+NOTES: install mongodb before start the service on localhost, config connection infomation in ~/apnsd/ebin/apnsd 
+
+
+### Libaray 
+the android libaray has been compiled to aar in 
+	
+	$ ~/sdks/client/android/lib/apnsd/build/outputs/aar 
+
+or compile it with the source code:
+	
+	$ ~/sdks/client/android/lib/apnsd
+
+
+### USAGE
+upon the service started, install demo on your android device or build your apps with the lib, then run foo.php to push a message to your device with your configurations. have fun !!! 
