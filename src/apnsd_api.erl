@@ -10,7 +10,7 @@
 %% start link
 start_link() ->
     Pid = spawn_link(?MODULE,loop,[]),
-    register(?MODULE, Pid),
+    register(apnsd_api, Pid),
     {ok,Pid}.
 
 %% main 
@@ -18,6 +18,7 @@ loop() ->
 	receive
       {Sender,push,{Ch,Dev,Data}} ->
             spawn(fun()->
+                     %% io:format("push command received"),
                      apnsd_util:send_msg_to_process_byname(?CHANNEL_MODULE,{push, nil, {Ch,Dev,Data}}),
                      apnsd_util:send_msg_to_process(Sender,ok)
                   end),

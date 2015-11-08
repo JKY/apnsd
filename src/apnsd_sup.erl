@@ -22,7 +22,7 @@ init([]) ->
               ?WORKER(apnsd_mq),
               ?WORKER(apnsd_event),
            		?WORKER(apnsd_channel),
-           		?WORKER(apnsd_console),
+           		?WORKER(apnsd_api),
            		?SUPERVISOR(apnsd_conn)				
           ]
        }}.

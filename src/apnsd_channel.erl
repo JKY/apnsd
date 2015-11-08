@@ -68,6 +68,7 @@ service(S) ->
             end;
           {push, Reporter, {Name,DevId,Data}} ->
                 spawn(fun() ->
+                            %% io:format("on channel ~s, push to ~s ",[Name,DevId]),
                             pg2:which_groups(),
                             case pg2:get_members(Name) of 
                                 {error,_}->

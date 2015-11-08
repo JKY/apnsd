@@ -2,8 +2,8 @@
 if(!defined("__APNS_PHP_")){
 	define("__APNS_PHP_",1);
 	
-
 	class APNSAgent {
+
 		private $_link;
 		
 		public function APNSAgent($host,$cookie){
@@ -25,12 +25,12 @@ if(!defined("__APNS_PHP_")){
 				$method = 'push';
 				if(is_array($option)){
 					if(array_key_exists('sync',$option) && $option['sync'] == true) {
-							$method = 'sync_push';
+						$method = 'sync_push';
 					}
 				}
 				try{
-					$x = peb_vencode("{~p,~a,{~a,~a,~b}}", array(array($this->_link, $method,  array($ch,$dev,$data))));
-					peb_send_byname("apnsd_daemon", $x, $this->_link);
+					$o = peb_vencode("{~p,~a,{~a,~a,~b}}", array(array($this->_link, $method,  array($ch,$dev,$data))));
+					peb_send_byname("apnsd_api", $o, $this->_link);
 					$reply = peb_receive($this->_link);
 					if($reply === FALSE){
 						return "timeout";
@@ -46,7 +46,6 @@ if(!defined("__APNS_PHP_")){
 			}
 		}	
 		
-		
 		/**
 		 * get the channel stat
 		 */ 
@@ -54,7 +53,7 @@ if(!defined("__APNS_PHP_")){
 			if ($this->_link) {
 				try{
 					$x = peb_vencode("{~p,~a,~a}", array(array($this->_link, 'stat', $ch)));
-					peb_send_byname("apnsd_daemon", $x, $this->_link);
+					peb_send_byname("apnsd_api", $x, $this->_link);
 					$reply = peb_receive($this->_link);
 					if($reply === FALSE){
 						return false;
@@ -72,16 +71,15 @@ if(!defined("__APNS_PHP_")){
 		
 		function __destruct(){
 			if(is_resource($this->_link))
-					peb_close($this->_link); 		
+				peb_close($this->_link); 		
 		}
 	}
 }
 
-
-
-$agent  = new APNSAgent("a3@localhost","123");
-echo $agent->push("test", "ttt", "hello world1", array('sync'=>true));
+$agent = new APNSAgent("apnsd@127.0.0.1","123");
+$result = $agent->push("foo", "dev", "hello world....",array("sync"=>false));
+print_r($result);
 echo "\n";
-//$stat = $agent->stat('test');
+//$stat = $agent->stat('foo');
 //print_r($stat);
 ?>

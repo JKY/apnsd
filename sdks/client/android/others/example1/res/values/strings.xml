@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, APNSDemoActivity!</string>
+    <string name="app_name">apns example1</string>
+    <string name="usage">This is the APNS client demo, type a unique id in bellow box then start service by click the start button, go to www.push-notification.org home to send a test message.</string>
+
+</resources>

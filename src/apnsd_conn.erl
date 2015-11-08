@@ -15,7 +15,7 @@ start_link() ->
     
 
 init([]) ->
-    io:format("apnsd conn init!\n"),
+    %% io:format("apnsd conn init!\n"),
     {ok,Port} = application:get_env(port),
     {ok,Sock} = gen_tcp:listen(Port,[binary,{active,false},{reuseaddr, true}]),
     spawn_link(fun init_Q/0),
@@ -30,7 +30,7 @@ open_dev() ->
              
     
 init_Q() ->
-    io:format("apnsd_conn init_Q!\n"),
+    %% io:format("apnsd_conn init_Q!\n"),
 	{ok,MAX_QUEQUE} =  application:get_env(maxq),
     [open_dev() || _ <- lists:seq(1,MAX_QUEQUE)],
     ok.
